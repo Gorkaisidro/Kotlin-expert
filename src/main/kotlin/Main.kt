@@ -1,45 +1,100 @@
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Mic
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import kotlin.concurrent.thread
 import kotlin.jvm.internal.Ref.BooleanRef
 
 class AppState {
-    // Definición de un estado mutable llamado "text" que almacenará el contenido del TextField
-    val text = mutableStateOf("")
-    // Determinación si el botón estará habilitado o no según si hay texto ingresado en el TextField
-    val buttonEnabled: Boolean
-        get() = text.value.isNotEmpty()
+    val state = mutableStateOf(UiState())
+
+    fun loadNotes() {
+        thread {
+            state.value = UiState(loading = true)
+            getNotes {
+                state.value = UiState(notes = it, loading = false)
+            }
+        }
+    }
+
+    data class UiState(
+        val notes: List<Note> = emptyList(),
+        val loading: Boolean = false
+    )
 }
 
 @Composable
 @Preview
 fun App(appState : AppState) {
 
+    LaunchedEffect(true) {
+        appState.loadNotes()
+    }
+
+    //val notes = appState.state.value
+
     // Comienza la composición de la interfaz de usuario utilizando el MaterialTheme
     MaterialTheme {
-        // Columna que organiza los elementos verticalmente
-        Column {
-            // Entrada de texto donde el usuario puede ingresar su texto
-            TextField(value = appState.text.value, onValueChange = { newText -> appState.text.value = newText })
-            // Texto que muestra el mensaje construido
-            Text(text = buildMessage(appState.text.value))
-            // Botón para limpiar el texto del TextField
-            Button(onClick = { appState.text.value = "" }, enabled = appState.buttonEnabled) {
-                Text("Clean")
+        Box(contentAlignment = Alignment.Center) {
+            if(appState.state.value.loading){
+                CircularProgressIndicator()
+            }
+            NotesList(appState.state.value.notes)
+        }
+
+    }
+}
+
+@Composable
+private fun NotesList(notes: List<Note>) {
+    LazyColumn (
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+
+    ) {
+        items(notes) { note ->
+            Card(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(0.8f)
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Row {
+                        Text(
+                            text = note.title,
+                            style = MaterialTheme.typography.h6,
+                            modifier = Modifier.weight(1f)
+                        )
+                        if (note.type == Note.Type.AUDIO) {
+                            Icon(
+                                imageVector = Icons.Default.Mic,
+                                contentDescription = null
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(note.description)
+                }
             }
         }
     }
 }
 
-fun buildMessage(message: String) : String = "Hello $message"
 
 fun main() {
     val appState = AppState()
