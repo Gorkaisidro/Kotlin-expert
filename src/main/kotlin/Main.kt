@@ -5,10 +5,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Mic
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -17,24 +14,6 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import kotlin.concurrent.thread
 import kotlin.jvm.internal.Ref.BooleanRef
-
-class AppState {
-    val state = mutableStateOf(UiState())
-
-    fun loadNotes() {
-        thread {
-            state.value = UiState(loading = true)
-            getNotes {
-                state.value = UiState(notes = it, loading = false)
-            }
-        }
-    }
-
-    data class UiState(
-        var notes: List<Note>? = null,
-        val loading: Boolean = false
-    )
-}
 
 @Composable
 @Preview
