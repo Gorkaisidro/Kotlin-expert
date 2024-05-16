@@ -8,22 +8,18 @@ import androidx.compose.material.icons.filled.Mic
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-import kotlin.concurrent.thread
-import kotlin.jvm.internal.Ref.BooleanRef
 
 @Composable
 @Preview
-fun App(appState : AppState) {
-
-    val notes = appState.state.value.notes
+fun App() = with(AppState) {
+    val notes = state.notes
 
     if(notes == null) {
         LaunchedEffect(true) {
-            appState.loadNotes()
+            loadNotes()
         }
     }
 
@@ -33,11 +29,11 @@ fun App(appState : AppState) {
             contentAlignment = Alignment.Center,
             modifier = Modifier.fillMaxSize()
         ) {
-            if(appState.state.value.loading){
+            if(state.loading){
                 CircularProgressIndicator()
             }
-            if(notes != null) {
-                NotesList(notes)
+            notes?.let {
+                NotesList(it)
             }
         }
 
@@ -83,10 +79,9 @@ private fun NotesList(notes: List<Note>) {
 
 
 fun main() {
-    val appState = AppState()
     application {
         Window(onCloseRequest = ::exitApplication) {
-            App(appState)
+            App()
         }
     }
 }
