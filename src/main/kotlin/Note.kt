@@ -1,4 +1,7 @@
 import Note.Type
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import kotlin.concurrent.thread
 
 data class Note (
@@ -8,14 +11,13 @@ data class Note (
     enum class Type { TEXTO, AUDIO }
 }
 
-fun getNotes(callback: (List<Note>) -> Unit) {
-    Thread.sleep(2000)
-    val notes = (1..10).map {
+suspend fun getNotes() = withContext(Dispatchers.IO) {
+    delay(2000)
+    (1..10).map {
         Note(
             "Title $it",
             "Description $it",
             if (it % 3 == 0) Type.AUDIO else Type.TEXTO
         )
     }
-    callback(notes)
 }
