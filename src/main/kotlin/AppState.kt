@@ -3,18 +3,24 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlin.concurrent.thread
 import kotlin.coroutines.CoroutineContext
 
 object AppState {
 
-    var state by mutableStateOf(UiState())
+    private val _state = MutableStateFlow(UiState())
+    val state = _state.asStateFlow()
 
     fun loadNotes(coroutineScope: CoroutineScope) {
         coroutineScope.launch {
-            state = UiState (loading = true)
-            state = UiState(notes = getNotes())
+            _state.value = UiState (loading = true)
+
+            getNotes().collect {
+                _state.value = UiState(notes = it)
+            }
         }
     }
 

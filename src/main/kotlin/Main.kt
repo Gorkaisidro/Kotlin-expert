@@ -15,12 +15,10 @@ import androidx.compose.ui.window.application
 @Composable
 @Preview
 fun App() = with(AppState) {
-    val notes = state.notes
+    val state by state.collectAsState()
 
-    if(notes == null) {
-        LaunchedEffect(true) {
-            loadNotes(this)
-        }
+    LaunchedEffect(true) {
+        loadNotes(this)
     }
 
     // Comienza la composición de la interfaz de usuario utilizando el MaterialTheme
@@ -32,7 +30,7 @@ fun App() = with(AppState) {
             if(state.loading){
                 CircularProgressIndicator()
             }
-            notes?.let {
+            state.notes?.let {
                 NotesList(it)
             }
         }
