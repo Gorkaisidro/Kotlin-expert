@@ -1,20 +1,27 @@
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-fun main(): Unit = runBlocking {
-    val res = flow {
-        emit(1)
-        delay(200)
-        emit(2)
-    }.filter {it % 2 == 0}
+class ViewModel {
+    private val _state: MutableStateFlow<Note> = MutableStateFlow(Note("Title 1", "Description 2", Note.Type.TEXTO))
+    val state: StateFlow<Note> = _state.asStateFlow()
 
-    launch {
-        res.collect {
-            println(it)
+    suspend fun update() {
+        var count = 1
+        while (true) {
+            delay(2000)
+            count++
+            _state.value = Note("Title $count", "Description $count", Note.Type.TEXTO)
         }
     }
+}
 
+
+fun main(): Unit = runBlocking {
+    val viewModel = ViewModel()
+    launch {
+        viewModel.update()
+    }
+    viewModel.state.collect(::println)
 }
