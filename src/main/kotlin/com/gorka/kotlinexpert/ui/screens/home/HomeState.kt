@@ -1,15 +1,13 @@
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+package com.gorka.kotlinexpert.ui.screens.home
+
+import com.gorka.kotlinexpert.data.Note
+import com.gorka.kotlinexpert.data.getNotes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlin.concurrent.thread
-import kotlin.coroutines.CoroutineContext
 
-object AppState {
+object HomeState {
 
     private val _state = MutableStateFlow(UiState())
     val state = _state.asStateFlow()

@@ -1,4 +1,5 @@
-import androidx.compose.desktop.ui.tooling.preview.Preview
+package com.gorka.kotlinexpert.ui.screens.home
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -9,37 +10,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.application
+import com.gorka.kotlinexpert.data.Note
 
 @Composable
-@Preview
-fun App() = with(AppState) {
-    val state by state.collectAsState()
-
-    LaunchedEffect(true) {
-        loadNotes(this)
-    }
-
-    // Comienza la composición de la interfaz de usuario utilizando el MaterialTheme
-    MaterialTheme {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            if(state.loading){
-                CircularProgressIndicator()
-            }
-            state.notes?.let {
-                NotesList(it)
-            }
-        }
-
-    }
-}
-
-@Composable
-private fun NotesList(notes: List<Note>) {
+fun NotesList(notes: List<Note>) {
     LazyColumn (
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -71,15 +45,6 @@ private fun NotesList(notes: List<Note>) {
                     Text(note.description)
                 }
             }
-        }
-    }
-}
-
-
-fun main() {
-    application {
-        Window(onCloseRequest = ::exitApplication) {
-            App()
         }
     }
 }
