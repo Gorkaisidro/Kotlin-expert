@@ -5,7 +5,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class ViewModel {
-    private val _state: MutableStateFlow<Note> = MutableStateFlow(Note("Title 1", "Description 2", Note.Type.TEXTO))
+    private val _state: MutableStateFlow<Note> = MutableStateFlow(Note("Title 1", "Description 2", Note.Type.TEXT))
     val state: StateFlow<Note> = _state.asStateFlow()
 
     suspend fun update() {
@@ -13,7 +13,7 @@ class ViewModel {
         while (true) {
             delay(2000)
             count++
-            _state.value = Note("Title $count", "Description $count", Note.Type.TEXTO)
+            _state.value = Note("Title $count", "Description $count", Note.Type.TEXT)
         }
     }
 }

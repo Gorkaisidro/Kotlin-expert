@@ -9,7 +9,7 @@ data class Note (
     val title: String,
     val description: String,
     val type: Type) {
-    enum class Type { TEXTO, AUDIO }
+    enum class Type { TEXT, AUDIO }
 }
 
 fun getNotes() = flow {
@@ -18,7 +18,7 @@ fun getNotes() = flow {
         Note(
             "Title $it",
             "Description $it",
-            if (it % 3 == 0) Type.AUDIO else Type.TEXTO
+            if (it % 3 == 0) Type.AUDIO else Type.TEXT
         )
     }
     emit(notes)

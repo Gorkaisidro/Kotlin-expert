@@ -18,7 +18,7 @@ fun Home() = with(HomeState) {
 
     // Comienza la composición de la interfaz de usuario utilizando el MaterialTheme
     MaterialTheme {
-        Scaffold(topBar = { TopBar() }) { padding ->
+        Scaffold(topBar = { TopBar(::onFilterClick) }) { padding ->
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier.fillMaxSize().padding(padding)
@@ -26,7 +26,7 @@ fun Home() = with(HomeState) {
                 if (state.loading) {
                     CircularProgressIndicator()
                 }
-                state.notes?.let {
+                state.filterNotes?.let {
                     NotesList(it)
                 }
             }
