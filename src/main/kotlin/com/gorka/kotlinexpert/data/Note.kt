@@ -10,9 +10,10 @@ data class Note (
     val description: String,
     val type: Type) {
     enum class Type { TEXT, AUDIO }
+    companion object
 }
 
-fun getNotes() = flow {
+val Note.Companion.fakeNotes get() = flow {
     delay(2000)
     val notes = (1..10).map {
         Note(

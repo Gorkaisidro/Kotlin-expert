@@ -2,7 +2,7 @@ package com.gorka.kotlinexpert.ui.screens.home
 
 import com.gorka.kotlinexpert.data.Filter
 import com.gorka.kotlinexpert.data.Note
-import com.gorka.kotlinexpert.data.getNotes
+import com.gorka.kotlinexpert.data.fakeNotes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,7 +18,7 @@ object HomeState {
         coroutineScope.launch {
             _state.value = UiState (loading = true)
 
-            getNotes().collect {
+            Note.fakeNotes.collect {
                 _state.value = UiState(notes = it)
             }
         }

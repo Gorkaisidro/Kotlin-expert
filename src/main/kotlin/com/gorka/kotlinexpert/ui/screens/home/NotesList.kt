@@ -17,7 +17,6 @@ fun NotesList(notes: List<Note>) {
     LazyColumn (
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
-
     ) {
         items(notes) { note ->
             Card(
