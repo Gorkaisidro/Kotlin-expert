@@ -1,7 +1,11 @@
 package com.gorka.kotlinexpert.ui.screens.home
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.gorka.kotlinexpert.data.Filter
 import com.gorka.kotlinexpert.data.Note
+import com.gorka.kotlinexpert.data.remote.NotesRepository
 import com.gorka.kotlinexpert.data.remote.notesClient
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -18,21 +22,25 @@ operator fun <T> MutableStateFlow<T>.setValue(owner: Any?, property: KProperty<*
     this.value = newValue
 }
 
-object HomeState {
+class HomeViewModel(private val scope: CoroutineScope) {
 
-    private val _state = MutableStateFlow(UiState())
-    val state = _state.asStateFlow()
+    var state by mutableStateOf(UiState())
+        private set
 
-    fun loadNotes(coroutineScope: CoroutineScope) {
-        coroutineScope.launch {
-            _state.value = UiState(loading = true)
-            val response = notesClient.request("http://127.0.0.1:8080/notes")
-            _state.value = UiState(notes = response.body())
+    init {
+        loadNotes()
+    }
+
+    private fun loadNotes() {
+        scope.launch {
+            state = UiState(loading = true)
+            val response = NotesRepository.getAll()
+            state = UiState(notes = response)
         }
     }
 
     fun onFilterClick(filter: Filter) {
-        _state.update { it.copy(filter = filter) }
+        state = state.copy(filter = filter)
     }
 
     data class UiState(

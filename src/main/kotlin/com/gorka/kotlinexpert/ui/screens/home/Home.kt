@@ -8,22 +8,18 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.gorka.kotlinexpert.data.Note
 
 @Composable
 @Preview
-fun Home(onCreateClick: () -> Unit): Unit = with(HomeState) {
-    val state by state.collectAsState()
-
-    LaunchedEffect(true) {
-        loadNotes(this)
-    }
+fun Home(vm: HomeViewModel, onNoteClick: (noteId: Long) -> Unit) {
 
     // Comienza la composición de la interfaz de usuario utilizando el MaterialTheme
     MaterialTheme {
         Scaffold(
-            topBar = { TopBar(::onFilterClick) },
+            topBar = { TopBar(vm::onFilterClick) },
             floatingActionButton = {
-                FloatingActionButton(onClick = onCreateClick){
+                FloatingActionButton(onClick = { onNoteClick(Note.NEW_NOTE) }) {
                     Icon(
                         imageVector = Icons.Default.Add,
                         contentDescription = "Add Note")
@@ -33,7 +29,7 @@ fun Home(onCreateClick: () -> Unit): Unit = with(HomeState) {
             Box(
                 modifier = Modifier.fillMaxSize().padding(padding)
             ) {
-                if (state.loading) {
+                if (vm.state.loading) {
                     Box(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier.fillMaxSize()
@@ -45,8 +41,11 @@ fun Home(onCreateClick: () -> Unit): Unit = with(HomeState) {
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.TopCenter
                     ) {
-                        state.filterNotes?.let {
-                            NotesList(it)
+                        vm.state.filterNotes?.let { note ->
+                            NotesList(
+                                notes = note,
+                                onNoteClick = { onNoteClick(it.id) }
+                            )
                         }
                     }
                 }
