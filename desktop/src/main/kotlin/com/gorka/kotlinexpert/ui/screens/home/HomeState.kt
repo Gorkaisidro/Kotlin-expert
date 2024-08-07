@@ -6,14 +6,9 @@ import androidx.compose.runtime.setValue
 import com.gorka.kotlinexpert.data.Filter
 import com.gorka.kotlinexpert.data.Note
 import com.gorka.kotlinexpert.data.remote.NotesRepository
-import com.gorka.kotlinexpert.data.remote.notesClient
-import io.ktor.client.call.*
-import io.ktor.client.request.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.reflect.KProperty
 

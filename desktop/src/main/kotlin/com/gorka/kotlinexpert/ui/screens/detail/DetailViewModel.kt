@@ -7,7 +7,6 @@ import com.gorka.kotlinexpert.data.Note
 import com.gorka.kotlinexpert.data.remote.NotesRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.plus
 
 class DetailViewModel(private val scope: CoroutineScope, private val noteId: Long) {
 
